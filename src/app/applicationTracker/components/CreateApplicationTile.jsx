@@ -21,7 +21,7 @@ const CreateApplicationTile = ({ setShowModal, setModalEdit }) => {
             alt="plus icon"
             className="w-1/6 bg-light-mode-bg rounded-full p-2"
           />
-          <span className="font-moul text-dark-gray text-2xl">
+          <span className="font-moul text-dark-blue text-2xl">
             Add Application
           </span>
         </div>
