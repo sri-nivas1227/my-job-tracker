@@ -1,0 +1,55 @@
+{
+  "flashcards": [
+    {
+      "mainPhrase": "ls",
+      "subPhrase": "Lists files and directories",
+      "points": [
+        "ls -l → Detailed view (permissions, owner, size, date)",
+        "ls -a → Show hidden files"
+      ]
+    },
+    {
+      "mainPhrase": "cd",
+      "subPhrase": "Changes the current directory",
+      "points": [
+        "cd /path/to/directory → Move to a specific directory",
+        "cd .. → Move up one level",
+        "cd ~ → Move to home directory"
+      ]
+    },
+    {
+      "mainPhrase": "pwd",
+      "subPhrase": "Prints the current working directory",
+      "points": []
+    },
+    {
+      "mainPhrase": "mkdir",
+      "subPhrase": "Creates a new directory",
+      "points": ["mkdir new_folder"]
+    },
+    {
+      "mainPhrase": "rm",
+      "subPhrase": "Removes files or directories",
+      "points": [
+        "rm file.txt → Remove file",
+        "rm -r folder/ → Remove directory and contents"
+      ]
+    },
+    {
+      "mainPhrase": "cp",
+      "subPhrase": "Copies files and directories",
+      "points": [
+        "cp file1.txt file2.txt → Copy file1 to file2",
+        "cp -r folder1 folder2 → Copy folder1 to folder2"
+      ]
+    },
+    {
+      "mainPhrase": "mv",
+      "subPhrase": "Moves or renames files",
+      "points": [
+        "mv oldname.txt newname.txt → Rename file",
+        "mv file.txt /destination/ → Move file to another directory"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "label": "Job Title",
+    "type": "text",
+    "key": "role"
+  },
+  {
+    "label": "Company Name",
+    "type": "text",
+    "key": "company"
+  },
+  {
+    "label": "Job Description Link",
+    "type": "text",
+    "key": "job_link",
+    "edit": true
+  },
+  {
+    "label": "Date Applied",
+    "type": "date",
+    "key": "date_applied"
+  },
+  {
+    "label": "Contact Name",
+    "type": "text",
+    "key": "contact_name"
+  },
+  {
+    "label": "Contact Email",
+    "type": "email",
+    "key": "contact_email"
+  },
+  {
+    "label": "Contact Phone",
+    "type": "phone",
+    "key": "contact_phone"
+  },
+  {
+    "label": "Status",
+    "type": "dropdown",
+    "key": "status",
+    "options": [
+      {
+        "label": "In Progress",
+        "value": "in_progress"
+      },
+      {
+        "label": "Interview Scheduled",
+        "value": "interview_scheduled"
+      },
+      {
+        "label": "Accepted",
+        "value": "accepted"
+      },
+      {
+        "label": "Rejected",
+        "value": "rejected"
+      }
+    ]
+  }
+]
