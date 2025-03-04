@@ -4,10 +4,9 @@ import crossIcon from "@/app/assets/icons/cross-icon.svg";
 import InputTypes from "@/app/applicationTracker/components/InputTypes";
 import formData from "@/app/tempResources/ApplicationTrackerForm.json";
 import PointsInModal from "@/app/applicationTracker/components/PointsInModal";
-import { use, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 import deleteIcon from "@/app/assets/icons/delete-icon-red.svg";
 
 const DetailModal = ({
@@ -34,94 +33,22 @@ const DetailModal = ({
     router.push("/applicationTracker");
   };
   const handleSaveApplication = () => {
-    console.log(applicationForm);
     if (isCreating) {
-      axios
-        .post(
-          "http://localhost:8000/application_tracker/add_application",
+      localStorage.setItem(
+        "applications",
+        JSON.stringify([
+          ...localStorage.getItem("applications"),
           applicationForm.reduce((acc, item) => {
             acc[item.key] = item.value;
             return acc;
           }, {}),
-
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer dummy-token`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          if (response.data.success) {
-            setEditMode(false);
-            setModalEdit(false);
-            setShowModal(false);
-            toast.success("Application added successfully", {
-              position: "top-center",
-            });
-            router.push("/applicationTracker");
-          } else {
-            toast.error("Application not added");
-          }
-        });
+        ])
+      );
     } else {
-      axios
-        .put(
-          "http://localhost:8000/application_tracker/update_application",
-          {
-            item_id: application._id,
-            update_data: applicationForm.reduce((acc, item) => {
-              acc[item.key] = item.value;
-              return acc;
-            }, {}),
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer dummy-token`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          if (response.data.success) {
-            toast.success("Application updated successfully", {
-              position: "top-center",
-            });
-            setEditMode(false);
-            setModalEdit(false);
-          } else {
-            toast.error("Application not updated", {
-              position: "top-center",
-            });
-          }
-        });
     }
   };
   const handleDeleteApplication = () => {
-    axios
-      .delete("http://localhost:8000/application_tracker/delete_application", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer dummy-token`,
-        },
-        data: {
-          item_id: application._id,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.data.success) {
-          toast.success("Application deleted successfully", {
-            position: "top-center",
-          });
-          setShowModal(false);
-          router.push("/applicationTracker");
-        } else {
-          toast.error("Application not deleted");
-        }
-      });
+    
   };
 
   const handleInputChange = (key, value) => {
