@@ -30,6 +30,6 @@
     "**/*.tsx",
     "src/app/dashboard/layout.jsx",
     "src/app/prepare/page.jsx"
-  ],
+, "src/app/applicationTracker/page.jsx"  ],
   "exclude": ["node_modules"]
 }

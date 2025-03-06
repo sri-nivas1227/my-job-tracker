@@ -7,12 +7,16 @@ import DetailModal from "@/app/applicationTracker/components/DetailModal";
 import CreateApplicationTile from "@/app/applicationTracker/components/CreateApplicationTile";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
+import { useSelector, useDispatch } from "react-redux";
+import { jobs } from "@/lib/features/apptracker/trackerSlice";
+
 export default function ApplicationTrackerPage() {
-  const [applicationList, setApplicationList] = useState([]);
+  // const [applicationList, setApplicationList] = useState([]);
   const [modalEditMode, setModalEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState({});
-
+  const applicationList = useSelector(jobs);
+  console.log(applicationList);
   return (
     <div className="">
       <div className="m-2 my-4 flex justify-center items-center">
@@ -34,7 +38,7 @@ export default function ApplicationTrackerPage() {
         />
         {applicationList &&
           applicationList.map((item) => (
-            <div key={item._id}>
+            <div key={item.id}>
               <ApplicationTile
                 application={item}
                 setShowModal={setShowModal}

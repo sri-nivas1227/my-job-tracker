@@ -8,7 +8,7 @@ export default function ApplicationTile({
   const router = useRouter();
   const handleApplicationClick = () => {
     setApplication(application);
-    router.push(`?applicationId=${application._id}`);
+    router.push(`?applicationId=${application.id}`);
     setShowModal(true);
   };
   return (

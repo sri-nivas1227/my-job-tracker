@@ -34,22 +34,10 @@ const DetailModal = ({
   };
   const handleSaveApplication = () => {
     if (isCreating) {
-      localStorage.setItem(
-        "applications",
-        JSON.stringify([
-          ...localStorage.getItem("applications"),
-          applicationForm.reduce((acc, item) => {
-            acc[item.key] = item.value;
-            return acc;
-          }, {}),
-        ])
-      );
     } else {
     }
   };
-  const handleDeleteApplication = () => {
-    
-  };
+  const handleDeleteApplication = () => {};
 
   const handleInputChange = (key, value) => {
     const newForm = applicationForm.map((item) => {
