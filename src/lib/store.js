@@ -21,17 +21,18 @@ const saveState = (state) => {
 };
 
 const preloadedState = loadState();
-
 const store = configureStore({
   reducer: {
     tracker: trackerReducer,
   },
-  preloadedState: preloadedState ? { person: preloadedState } : undefined,
+  preloadedState: preloadedState
+    ? { tracker: { jobs: preloadedState.tracker.jobs } }
+    : undefined,
 });
 
 // Subscribe to store changes and save state
 store.subscribe(() => {
-  saveState(store.getState().person);
+  saveState(store.getState());
 });
 
 export default store;

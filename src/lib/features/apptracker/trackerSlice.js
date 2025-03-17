@@ -21,19 +21,7 @@ The slug itself is a unique identifier for the application
 export const trackerSlice = createSlice({
   name: "tracker",
   initialState: {
-    jobs: [
-      {
-        id: "1",
-        role: "Software Engineer",
-        company: "Google",
-        dateApplied: "2021-10-10",
-        status: "Applied",
-        notes: "This is a note",
-        jobDescriptionLink: "https://google.com",
-        resumeLink: "https://google.com",
-        coverLetterLink: "https://google.com",
-      },
-    ],
+    jobs: [],
   },
   reducers: {
     addApplication: (state, action) => {

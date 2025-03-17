@@ -8,6 +8,12 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import deleteIcon from "@/app/assets/icons/delete-icon-red.svg";
+import { useDispatch } from "react-redux";
+import {
+  addApplication,
+  deleteApplication,
+  editApplication,
+} from "@/lib/features/apptracker/trackerSlice";
 
 const DetailModal = ({
   application,
@@ -23,6 +29,7 @@ const DetailModal = ({
       return { key: item.key, value: "" };
     })
   );
+  const dispatch = useDispatch();
   const router = useRouter();
   const params = useSearchParams();
   const isCreating = params.get("create");
@@ -34,6 +41,14 @@ const DetailModal = ({
   };
   const handleSaveApplication = () => {
     if (isCreating) {
+      const newApplication = {};
+      applicationForm.forEach((item) => {
+        newApplication[item.key] = item.value;
+      });
+      console.log(newApplication);
+      dispatch(addApplication(newApplication));
+      toast.success("Application Created Successfully");
+      handleModalClose();
     } else {
     }
   };
