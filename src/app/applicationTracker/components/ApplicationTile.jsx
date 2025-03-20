@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { titleCase } from "@/lib/utils/utilityFunctions";
 export default function ApplicationTile({
   application,
   setShowModal,
@@ -8,21 +9,24 @@ export default function ApplicationTile({
   const router = useRouter();
   const handleApplicationClick = () => {
     setApplication(application);
-    router.push(`?applicationId=${application.id}`);
+    router.push(`?applicationId=${application._id}`);
     setShowModal(true);
   };
   return (
     <div onClick={handleApplicationClick} className="application-tile p-1">
-      <div className="p-2 py-4 grid grid-cols-2 text-dark-gray bg-opacity-50  bg-light-blue w-fit rounded-xl text-base font-moul cursor-pointer border-[0.5px] border-transparent hover:border-gray-700">
+      <div className="p-2 py-4 w-full h-full text-dark-gray bg-opacity-50  bg-light-blue rounded-xl text-base font-moul cursor-pointer border-[0.5px] border-transparent hover:border-gray-700">
+        <p className="text-center text-3xl">{titleCase(application.company)}</p>
         <div className=" flex flex-col gap-5 ">
-          <p className="">Company Name :</p>
-          <p className="">Role :</p>
-          <p className="">Applied on :</p>
-        </div>
-        <div className=" flex flex-col gap-5 ">
-          <p className="">{application.company}</p>
-          <p className="">{application.role}</p>
-          <p className="">{application.date_applied}</p>
+          <div className="">
+            <p className="text-xs font-medium font-sans text-slate-700">Role</p>
+            <p className="text-xl">{titleCase(application.role)}</p>
+          </div>
+          <div className="">
+            <p className="text-xs font-medium font-sans text-slate-700">
+              Date Applied
+            </p>
+            <p className="text-xl">{application.date_applied}</p>
+          </div>
         </div>
       </div>
     </div>

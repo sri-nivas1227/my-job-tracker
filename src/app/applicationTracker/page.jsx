@@ -5,18 +5,33 @@ import searchIcon from "@/app/assets/icons/search-icon.svg";
 import Image from "next/image";
 import DetailModal from "@/app/applicationTracker/components/DetailModal";
 import CreateApplicationTile from "@/app/applicationTracker/components/CreateApplicationTile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { useSelector, useDispatch } from "react-redux";
-import { jobs } from "@/lib/features/apptracker/trackerSlice";
+// import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+// import { jobs } from "@/lib/features/apptracker/trackerSlice";
 
 export default function ApplicationTrackerPage() {
   // const [applicationList, setApplicationList] = useState([]);
+
   const [modalEditMode, setModalEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState({});
-  const applicationList = useSelector(jobs);
+  const [applicationList, setApplicationList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // const applicationList = useSelector(jobs);
   console.log(applicationList);
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get("/api/applications").then((res) => {
+      console.log(res.data);
+      setApplicationList(res.data.data.applications);
+      setIsLoading(false);
+    });
+  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="">
       <div className="m-2 my-4 flex justify-center items-center">

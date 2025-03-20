@@ -1,17 +1,17 @@
-'use client'
+"use client";
 import NavBar from "@/app/global/NavBar";
-import { Provider } from "react-redux";
-import store from "@/lib/store";
+// import { Provider } from "react-redux";
+// import store from "@/lib/store";
 
 export default function ApplicationTrackerLayout({ children }) {
   return (
     <div className="h-screen flex flex-col fixed bg-light-mode-bg">
       {/* <div className="h-full"> */}
-      <Provider store={store}>
-        <NavBar />
-        {/* </div> */}
-        <div className="w-4/5 min-h-full m-auto py-4">{children}</div>
-      </Provider>
+      {/* <Provider store={store}> */}
+      <NavBar />
+      {/* </div> */}
+      <div className="w-4/5 min-h-full m-auto py-4">{children}</div>
+      {/* </Provider> */}
     </div>
   );
 }

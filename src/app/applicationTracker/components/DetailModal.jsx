@@ -8,12 +8,13 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import deleteIcon from "@/app/assets/icons/delete-icon-red.svg";
-import { useDispatch } from "react-redux";
-import {
-  addApplication,
-  deleteApplication,
-  editApplication,
-} from "@/lib/features/apptracker/trackerSlice";
+import axios from "axios";
+// import { useDispatch } from "react-redux";
+// import {
+//   addApplication,
+//   deleteApplication,
+//   editApplication,
+// } from "@/lib/features/apptracker/trackerSlice";
 
 const DetailModal = ({
   application,
@@ -29,7 +30,7 @@ const DetailModal = ({
       return { key: item.key, value: "" };
     })
   );
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const router = useRouter();
   const params = useSearchParams();
   const isCreating = params.get("create");
@@ -39,20 +40,52 @@ const DetailModal = ({
     setSelectedApplication({});
     router.push("/applicationTracker");
   };
-  const handleSaveApplication = () => {
+  const handleSaveApplication = async () => {
     if (isCreating) {
       const newApplication = {};
       applicationForm.forEach((item) => {
         newApplication[item.key] = item.value;
       });
       console.log(newApplication);
-      dispatch(addApplication(newApplication));
-      toast.success("Application Created Successfully");
-      handleModalClose();
+      // dispatch(addApplication(newApplication));
+      axios
+        .post("/api/applications", newApplication, {
+          "Content-Type": "application/json",
+        })
+        .then((res) => {
+          toast.success("Application Created Successfully");
+          handleModalClose();
+        });
     } else {
+      const updatedApplication = { id: application.id };
+      const update_data = {};
+      applicationForm.forEach((item) => {
+        update_data[item.key] = item.value;
+      });
+      updatedApplication.update_data = update_data;
+      console.log(updatedApplication);
+      // dispatch(editApplication(updatedApplication));
+      axios
+        .put(`/api/applications`, updatedApplication, {
+          "Content-Type": "application/json",
+        })
+        .then((res) => {
+          toast.success("Application Edited Successfully");
+          handleModalClose();
+        });
     }
   };
-  const handleDeleteApplication = () => {};
+  const handleDeleteApplication = () => {
+    axios
+      .delete(`/api/applications`, {
+        data: { id: application.id },
+        "Content-Type": "application/json",
+      })
+      .then((res) => {
+        toast.success("Application Deleted Successfully");
+        handleModalClose();
+      });
+  };
 
   const handleInputChange = (key, value) => {
     const newForm = applicationForm.map((item) => {
@@ -62,6 +95,33 @@ const DetailModal = ({
       return item;
     });
     setApplicationForm(newForm);
+  };
+
+  const handleFileUpload = async (file) => {
+    if (!file) return alert("Please select a file!");
+    try {
+      axios
+        .post("/api/fileUpload", {
+          data: {
+            fileName: file.name,
+            fileType: file.type,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          const signedUrl = res.data.signedUrl;
+          axios.put(signedUrl, {
+            headers: {
+              "Content-Type": file.type,
+            },
+            data: file,
+          });
+        });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

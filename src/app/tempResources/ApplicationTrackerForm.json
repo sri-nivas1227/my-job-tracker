@@ -36,6 +36,11 @@
     "key": "contact_phone"
   },
   {
+    "label": "Resume",
+    "type": "file",
+    "key": "resume_link"
+  },
+  {
     "label": "Status",
     "type": "dropdown",
     "key": "status",
