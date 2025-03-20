@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { createObjectId } from "@/lib/utils/utilityFunctions";
 
 export async function GET() {
   const applications = await prisma.application.findMany();

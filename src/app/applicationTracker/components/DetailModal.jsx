@@ -48,14 +48,15 @@ const DetailModal = ({
       });
       console.log(newApplication);
       // dispatch(addApplication(newApplication));
-      axios
-        .post("/api/applications", newApplication, {
-          "Content-Type": "application/json",
-        })
-        .then((res) => {
-          toast.success("Application Created Successfully");
-          handleModalClose();
-        });
+      // axios
+      //   .post("/api/applications", newApplication, {
+      //     "Content-Type": "application/json",
+      //   })
+      //   .then((res) => {
+      //     toast.success("Application Created Successfully");
+      //     handleModalClose();
+      //   });
+      handleFileUpload(newApplication.resume_link);
     } else {
       const updatedApplication = { id: application.id };
       const update_data = {};
