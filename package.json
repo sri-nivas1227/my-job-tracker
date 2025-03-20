@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.772.0",
+    "@aws-sdk/s3-request-presigner": "^3.772.0",
+    "@prisma/client": "^6.5.0",
     "@reduxjs/toolkit": "^2.6.0",
+    "axios": "^1.8.4",
     "bson": "^6.10.3",
     "next": "15.2.1",
     "react": "^19.0.0",
@@ -19,9 +23,11 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "22.13.9",
+    "@types/node": "^22.13.9",
     "@types/react": "19.0.10",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4",
-    "typescript": "5.8.2"
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
   }
 }
