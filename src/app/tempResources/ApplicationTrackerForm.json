@@ -41,6 +41,11 @@
     "key": "resume_link"
   },
   {
+    "label": "Cover Letter",
+    "type": "file",
+    "key": "cover_letter_link"
+  },
+  {
     "label": "Status",
     "type": "dropdown",
     "key": "status",

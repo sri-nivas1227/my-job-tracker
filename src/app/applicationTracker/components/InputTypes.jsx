@@ -80,6 +80,7 @@ const InputTypes = ({
         type="file"
         className="text-base px-2 rounded-lg bg-light-mode-bg"
         onChange={(e) => onInputValueChange(inputKey, e.target.files[0])}
+        defaultValue={existingValue}
       />
     );
   }

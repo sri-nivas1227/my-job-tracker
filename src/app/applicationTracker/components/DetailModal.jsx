@@ -9,12 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import deleteIcon from "@/app/assets/icons/delete-icon-red.svg";
 import axios from "axios";
-// import { useDispatch } from "react-redux";
-// import {
-//   addApplication,
-//   deleteApplication,
-//   editApplication,
-// } from "@/lib/features/apptracker/trackerSlice";
 
 const DetailModal = ({
   application,
@@ -30,7 +24,6 @@ const DetailModal = ({
       return { key: item.key, value: "" };
     })
   );
-  // const dispatch = useDispatch();
   const router = useRouter();
   const params = useSearchParams();
   const isCreating = params.get("create");
@@ -42,21 +35,22 @@ const DetailModal = ({
   };
   const handleSaveApplication = async () => {
     if (isCreating) {
+      await handleUploads();
       const newApplication = {};
+      console.log(applicationForm);
       applicationForm.forEach((item) => {
         newApplication[item.key] = item.value;
       });
       console.log(newApplication);
-      // dispatch(addApplication(newApplication));
-      // axios
-      //   .post("/api/applications", newApplication, {
-      //     "Content-Type": "application/json",
-      //   })
-      //   .then((res) => {
-      //     toast.success("Application Created Successfully");
-      //     handleModalClose();
-      //   });
-      handleFileUpload(newApplication.resume_link);
+
+      axios
+        .post("/api/applications", newApplication, {
+          "Content-Type": "application/json",
+        })
+        .then((res) => {
+          toast.success("Application Created Successfully");
+          handleModalClose();
+        });
     } else {
       const updatedApplication = { id: application.id };
       const update_data = {};
@@ -65,7 +59,6 @@ const DetailModal = ({
       });
       updatedApplication.update_data = update_data;
       console.log(updatedApplication);
-      // dispatch(editApplication(updatedApplication));
       axios
         .put(`/api/applications`, updatedApplication, {
           "Content-Type": "application/json",
@@ -97,28 +90,50 @@ const DetailModal = ({
     });
     setApplicationForm(newForm);
   };
-
-  const handleFileUpload = async (file) => {
-    if (!file) return alert("Please select a file!");
+  const handleUploads = async () => {
+    const resume_file = applicationForm.find(
+      (item) => item.key === "resume_link"
+    );
+    if (resume_file.value) {
+      await handleFileUpload(resume_file.value, "resume_link");
+    }
+    const cover_letter_file = applicationForm.find(
+      (item) => item.key === "cover_letter_link"
+    );
+    if (cover_letter_file.value) {
+      await handleFileUpload(cover_letter_file.value, "cover_letter_link");
+    }
+  };
+  const handleFileUpload = async (file, key) => {
+    if (!file) return null;
     try {
       axios
         .post("/api/fileUpload", {
-          data: {
-            fileName: file.name,
-            fileType: file.type,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
+          fileName: file.name,
+          fileType: file.type,
+          userId: "201bc91a-5406-4666-a209-04bd00c4c3c2",
         })
         .then((res) => {
-          const signedUrl = res.data.signedUrl;
-          axios.put(signedUrl, {
-            headers: {
-              "Content-Type": file.type,
-            },
-            data: file,
-          });
+          const signedUrl = res.data.data.signedUrl;
+          const fileUrl = res.data.data.viewUrl;
+          console.log(signedUrl, fileUrl);
+          axios
+            .put(signedUrl, file, {
+              headers: {
+                "Content-Type": file.type,
+              },
+            })
+            .then((res) => {
+              console.log("file uploaded", fileUrl);
+              setApplicationForm((prev) => {
+                return prev.map((item) => {
+                  if (item.key === key) {
+                    return { ...item, value: fileUrl };
+                  }
+                  return item;
+                });
+              });
+            });
         });
     } catch (error) {
       console.error(error);
@@ -248,7 +263,6 @@ const DetailModal = ({
           </div>
         </div>
       </div>
-      {/* <Toaster /> */}
     </div>
   );
 };
