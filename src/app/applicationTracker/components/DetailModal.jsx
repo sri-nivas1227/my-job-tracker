@@ -256,9 +256,20 @@ const DetailModal = ({
                   return (
                     <div key={index} className="grid grid-cols-2 items-center">
                       <p className="text-nowrap">{data.label} : </p>
-                      <p className="text-lg text-dark-gray">
-                        {application[data.key] ? application[data.key] : "-"}
-                      </p>
+                      {data.key === "resume_link" ||
+                      data.key === "cover_letter_link" ? (
+                        <Link
+                          className="p-1 bg-light-blue rounded-lg w-fit"
+                          href={application[data.key]}
+                          target="_blank"
+                        >
+                          View
+                        </Link>
+                      ) : (
+                        <p className="text-lg text-dark-gray">
+                          {application[data.key] ? application[data.key] : "-"}
+                        </p>
+                      )}
                     </div>
                   );
                 })}
