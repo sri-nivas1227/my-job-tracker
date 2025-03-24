@@ -2,7 +2,7 @@
 import Image from "next/image";
 import plusIcon from "@/app/assets/icons/plus-icon.svg";
 import { useRouter } from "next/navigation";
-const CreateApplicationTile = ({ setShowModal, setModalEdit }) => {
+const CreateApplicationTile = ({ setShowModal, setModalAction }) => {
   const router = useRouter();
 
   return (
@@ -10,7 +10,7 @@ const CreateApplicationTile = ({ setShowModal, setModalEdit }) => {
       onClick={() => {
         router.push("/applicationTracker?create=true");
         setShowModal(true);
-        setModalEdit(true);
+        setModalAction("create");
       }}
       className="w-full application-tile p-1"
     >

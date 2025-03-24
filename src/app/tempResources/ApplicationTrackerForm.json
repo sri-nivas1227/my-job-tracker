@@ -2,53 +2,72 @@
   {
     "label": "Job Title",
     "type": "text",
-    "key": "role"
+    "key": "role",
+    "required": true,
+    "editable": false
   },
   {
     "label": "Company Name",
     "type": "text",
-    "key": "company"
+    "key": "company",
+    "required": true,
+    "editable": false
   },
   {
     "label": "Job Description Link",
     "type": "text",
     "key": "job_link",
-    "edit": true
+    "required": false,
+    "editable": true
   },
   {
     "label": "Date Applied",
     "type": "date",
-    "key": "date_applied"
+    "key": "date_applied",
+    "required": true,
+    "editable": true
   },
   {
     "label": "Contact Name",
     "type": "text",
-    "key": "contact_name"
+    "key": "contact_name",
+    "required": false,
+    "editable": true
   },
   {
     "label": "Contact Email",
     "type": "email",
-    "key": "contact_email"
+    "key": "contact_email",
+    "required": false,
+    "editable": true
   },
   {
     "label": "Contact Phone",
     "type": "phone",
-    "key": "contact_phone"
+    "key": "contact_phone",
+    "required": false,
+    "editable": true
   },
   {
     "label": "Resume",
     "type": "file",
-    "key": "resume_link"
+    "key": "resume_link",
+    "required": false,
+    "editable": false
   },
   {
     "label": "Cover Letter",
     "type": "file",
-    "key": "cover_letter_link"
+    "key": "cover_letter_link",
+    "required": false,
+    "editable": false
   },
   {
     "label": "Status",
     "type": "dropdown",
     "key": "status",
+    "required": true,
+    "editable": true,
     "options": [
       {
         "label": "In Progress",

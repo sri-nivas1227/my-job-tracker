@@ -14,7 +14,7 @@ import axios from "axios";
 export default function ApplicationTrackerPage() {
   // const [applicationList, setApplicationList] = useState([]);
 
-  const [modalEditMode, setModalEditMode] = useState(false);
+  const [modalAction, setModalAction] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState({});
   const [applicationList, setApplicationList] = useState([]);
@@ -49,7 +49,7 @@ export default function ApplicationTrackerPage() {
       <div className="grid grid-cols-3 gap-6 gap-x-10">
         <CreateApplicationTile
           setShowModal={setShowModal}
-          setModalEdit={setModalEditMode}
+          setModalAction={setModalAction}
         />
         {applicationList &&
           applicationList.map((item) => (
@@ -57,6 +57,7 @@ export default function ApplicationTrackerPage() {
               <ApplicationTile
                 application={item}
                 setShowModal={setShowModal}
+                setModalAction={setModalAction}
                 setApplication={setSelectedApplication}
               />
             </div>
@@ -66,8 +67,8 @@ export default function ApplicationTrackerPage() {
         <DetailModal
           application={selectedApplication}
           setShowModal={setShowModal}
-          edit={modalEditMode}
-          setModalEdit={setModalEditMode}
+          modalAction={modalAction}
+          setModalAction={setModalAction}
           toast={toast}
           setSelectedApplication={setSelectedApplication}
         />

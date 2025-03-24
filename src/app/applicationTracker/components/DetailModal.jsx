@@ -4,8 +4,8 @@ import crossIcon from "@/app/assets/icons/cross-icon.svg";
 import InputTypes from "@/app/applicationTracker/components/InputTypes";
 import formData from "@/app/tempResources/ApplicationTrackerForm.json";
 import PointsInModal from "@/app/applicationTracker/components/PointsInModal";
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import deleteIcon from "@/app/assets/icons/delete-icon-red.svg";
 import axios from "axios";
@@ -13,35 +13,51 @@ import axios from "axios";
 const DetailModal = ({
   application,
   setShowModal,
-  edit,
-  setModalEdit,
+  modalAction,
+  setModalAction,
   toast,
   setSelectedApplication,
 }) => {
-  const [editMode, setEditMode] = useState(edit ? true : false);
   const [applicationForm, setApplicationForm] = useState(
     formData.map((item) => {
-      return { key: item.key, value: "" };
+      return {
+        key: item.key,
+        type: item.type,
+        value: "",
+        required: item.required,
+        editable: item.editable,
+        label: item.label,
+        options: item.options,
+      };
     })
   );
   const router = useRouter();
-  const params = useSearchParams();
-  const isCreating = params.get("create");
   const handleModalClose = () => {
     setShowModal(false);
-    setModalEdit(false);
+    setModalAction("");
     setSelectedApplication({});
     router.push("/applicationTracker");
   };
+  const checkSubmission = (type) => {
+    let submit = true;
+    applicationForm.forEach((item) => {
+      if (type === "create") {
+        if (item.required && !item.value) {
+          toast.error(`${item.label} is required`);
+          submit = false;
+        }
+      }
+    });
+    return submit;
+  };
   const handleSaveApplication = async () => {
     if (isCreating) {
+      checkSubmission("create");
       await handleUploads();
       const newApplication = {};
-      console.log(applicationForm);
       applicationForm.forEach((item) => {
         newApplication[item.key] = item.value;
       });
-      console.log(newApplication);
 
       axios
         .post("/api/applications", newApplication, {
@@ -58,7 +74,6 @@ const DetailModal = ({
         update_data[item.key] = item.value;
       });
       updatedApplication.update_data = update_data;
-      console.log(updatedApplication);
       axios
         .put(`/api/applications`, updatedApplication, {
           "Content-Type": "application/json",
@@ -116,7 +131,6 @@ const DetailModal = ({
         .then((res) => {
           const signedUrl = res.data.data.signedUrl;
           const fileUrl = res.data.data.viewUrl;
-          console.log(signedUrl, fileUrl);
           axios
             .put(signedUrl, file, {
               headers: {
@@ -124,7 +138,6 @@ const DetailModal = ({
               },
             })
             .then((res) => {
-              console.log("file uploaded", fileUrl);
               setApplicationForm((prev) => {
                 return prev.map((item) => {
                   if (item.key === key) {
@@ -146,13 +159,13 @@ const DetailModal = ({
         <div className="mb-8 flex justify-between items-center">
           <div className="">
             <div className="text-3xl">
-              {editMode
-                ? isCreating
-                  ? "Create Application"
-                  : "Edit Application"
+              {modalAction === "create"
+                ? "Create Application"
+                : modalAction === "edit"
+                ? "Edit Application"
                 : application["company"]}
             </div>
-            {!editMode && (
+            {modalAction !== "create" && (
               <div className="hover:text-steel-blue underline cursor-pointer">
                 <Link href={application.job_link ? application.job_link : "#"}>
                   Job Description Link{" "}
@@ -160,11 +173,10 @@ const DetailModal = ({
               </div>
             )}
           </div>
-          {!editMode && (
+          {modalAction === "view" && (
             <div
               onClick={() => {
-                setModalEdit(true);
-                setEditMode(true);
+                setModalAction("edit");
               }}
               className="p-2 text-lg bg-light-blue text-dark-gray w-fit rounded-lg cursor-pointer"
             >
@@ -182,12 +194,21 @@ const DetailModal = ({
         </div>
         <div className="w-full flex items-center justify-center gap-[2%]">
           <div className="w-2/3 p-2 text-xl flex flex-col gap-5">
-            {editMode ? (
+            {modalAction !== "view" ? (
               <>
-                {formData.map((data, index) => {
+                {applicationForm.map((data, index) => {
                   return (
-                    <div key={index} className="grid grid-cols-2 items-center">
-                      <p className="text-nowrap">{data.label} : </p>
+                    <div
+                      key={index}
+                      className={`${
+                        modalAction === "edit" && !data.editable
+                          ? "hidden"
+                          : "block"
+                      } grid grid-cols-2 items-center `}
+                    >
+                      <p className="text-nowrap">
+                        {data.label} {data.required ? "*" : ""} :{" "}
+                      </p>
                       <InputTypes
                         key={index}
                         inputType={data.type}
@@ -237,24 +258,27 @@ const DetailModal = ({
           </div>
           <div
             className={`flex ${
-              isCreating ? "justify-center" : "justify-end"
+              modalAction == "create" ? "justify-center" : "justify-end"
             } gap-6`}
           >
             <div
               className={`${
-                editMode ? "visible" : "invisible"
+                modalAction !== "view" ? "visible" : "invisible"
               } p-2 text-lg bg-steel-blue text-white w-fit rounded-lg cursor-pointer`}
               onClick={handleSaveApplication}
             >
               Save
             </div>
-            {!isCreating && (
+            {modalAction !== "view" && (
               <div
                 className={`${
-                  editMode ? "visible" : "invisible"
+                  modalAction !== "view" ? "visible" : "invisible"
                 } p-2 text-lg bg-red-500 text-white w-fit rounded-lg cursor-pointer`}
                 onClick={() => {
-                  setEditMode(false);
+                  setModalAction(modalAction === "edit" ? "view" : "");
+                  if (modalAction === "create") {
+                    handleModalClose();
+                  }
                 }}
               >
                 Cancel
