@@ -31,6 +31,9 @@ const DetailModal = ({
       };
     })
   );
+  const [submitApplication, setSubmitApplication] = useState(null);
+
+  const [uploads, setUploads] = useState([]);
   const router = useRouter();
   const handleModalClose = () => {
     setShowModal(false);
@@ -50,23 +53,16 @@ const DetailModal = ({
     });
     return submit;
   };
-  const handleSaveApplication = async () => {
-    if (isCreating) {
-      checkSubmission("create");
-      await handleUploads();
+  const handleSaveApplication = () => {
+    if (modalAction === "create") {
+      if (!checkSubmission("create")) return;
       const newApplication = {};
       applicationForm.forEach((item) => {
         newApplication[item.key] = item.value;
       });
 
-      axios
-        .post("/api/applications", newApplication, {
-          "Content-Type": "application/json",
-        })
-        .then((res) => {
-          toast.success("Application Created Successfully");
-          handleModalClose();
-        });
+      setSubmitApplication(newApplication);
+      handleUploads();
     } else {
       const updatedApplication = { id: application.id };
       const update_data = {};
@@ -105,21 +101,24 @@ const DetailModal = ({
     });
     setApplicationForm(newForm);
   };
-  const handleUploads = async () => {
+  const handleUploads = () => {
     const resume_file = applicationForm.find(
       (item) => item.key === "resume_link"
     );
-    if (resume_file.value) {
-      await handleFileUpload(resume_file.value, "resume_link");
-    }
     const cover_letter_file = applicationForm.find(
       (item) => item.key === "cover_letter_link"
     );
+
+    const uploadPromises = [];
+
+    if (resume_file.value) {
+      handleFileUpload(resume_file.value, "resume_link");
+    }
     if (cover_letter_file.value) {
-      await handleFileUpload(cover_letter_file.value, "cover_letter_link");
+      handleFileUpload(cover_letter_file.value, "cover_letter_link");
     }
   };
-  const handleFileUpload = async (file, key) => {
+  const handleFileUpload = (file, key) => {
     if (!file) return null;
     try {
       axios
@@ -131,6 +130,7 @@ const DetailModal = ({
         .then((res) => {
           const signedUrl = res.data.data.signedUrl;
           const fileUrl = res.data.data.viewUrl;
+          setUploads((prev) => prev.concat({ key, fileUrl }));
           axios
             .put(signedUrl, file, {
               headers: {
@@ -138,21 +138,41 @@ const DetailModal = ({
               },
             })
             .then((res) => {
-              setApplicationForm((prev) => {
-                return prev.map((item) => {
-                  if (item.key === key) {
-                    return { ...item, value: fileUrl };
-                  }
-                  return item;
-                });
-              });
+              if (res.status === 200) {
+                console.log("File uploaded successfully");
+              } else {
+                console.log("File upload failed");
+              }
             });
         });
     } catch (error) {
       console.error(error);
     }
   };
-
+  useEffect(() => {
+    if (
+      submitApplication?.resume_link &&
+      submitApplication?.cover_letter_link
+    ) {
+      if (uploads.length < 2) {
+        return;
+      }
+      if (submitApplication) {
+        const updatedApplication = { ...submitApplication };
+        uploads.forEach((upload) => {
+          updatedApplication[upload.key] = upload.fileUrl;
+        });
+        axios
+          .post("/api/applications", updatedApplication, {
+            "Content-Type": "application/json",
+          })
+          .then(() => {
+            toast.success("Application Created Successfully");
+            handleModalClose();
+          });
+      }
+    }
+  }, [uploads]);
   return (
     <div className=" fixed inset-0 bg-dark-gray bg-opacity-20 overflow-y-auto h-full w-full flex items-center justify-center">
       <div className="p-8 text-dark-blue font-moul border w-2/3 shadow-lg rounded-xl bg-light-cream flex flex-col gap-3">

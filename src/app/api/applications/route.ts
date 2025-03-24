@@ -17,6 +17,9 @@ type createApplicationType = {
   contact_name: string;
   contact_email: string;
   contact_phone: string;
+  resume_link: string;
+  cover_letter_link: string;
+  notes: string;
   status: string;
 };
 export async function POST(req: NextRequest) {
@@ -31,9 +34,9 @@ export async function POST(req: NextRequest) {
       contact_email: data.contact_email,
       contact_phone: data.contact_phone,
       status: data.status,
-      notes: "",
-      resume_link: "",
-      cover_letter_link: "",
+      notes: data.notes ? data.notes : "",
+      resume_link: data.resume_link,
+      cover_letter_link: data.cover_letter_link,
       userId: "201bc91a-5406-4666-a209-04bd00c4c3c2",
     },
   });
