@@ -8,7 +8,6 @@ const CreateApplicationTile = ({ setShowModal, setModalAction }) => {
   return (
     <div
       onClick={() => {
-        router.push("/applicationTracker?create=true");
         setShowModal(true);
         setModalAction("create");
       }}
