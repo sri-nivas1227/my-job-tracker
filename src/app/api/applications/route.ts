@@ -21,7 +21,6 @@ type createApplicationType = {
 };
 export async function POST(req: NextRequest) {
   const data: createApplicationType = await req.json();
-  console.log(data, "req body");
   const application = await prisma.application.create({
     data: {
       role: data.role,
@@ -64,14 +63,12 @@ export async function PUT(req: NextRequest) {
     where: { id },
   });
   const data = reqData.update_data;
-  console.log(data, "data");
   const updatableData = {};
   Object.keys(data).forEach((key) => {
     if (data[key] && data[key] !== oldData[key]) {
       updatableData[key] = data[key];
     }
   });
-  console.log(updatableData, "updatableData");
   const application = await prisma.application.update({
     where: { id },
     data: updatableData,

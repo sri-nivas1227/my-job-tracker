@@ -16,7 +16,6 @@ type fileUploadType = {
 };
 
 export async function POST(req: NextRequest) {
-  console.log("file upload route hit");
   const body: fileUploadType = await req.json();
   const fileName = body.fileName;
   const fileType = body.fileType;

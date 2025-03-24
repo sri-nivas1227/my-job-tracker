@@ -20,11 +20,9 @@ export default function ApplicationTrackerPage() {
   const [applicationList, setApplicationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const applicationList = useSelector(jobs);
-  console.log(applicationList);
   useEffect(() => {
     setIsLoading(true);
     axios.get("/api/applications").then((res) => {
-      console.log(res.data);
       setApplicationList(res.data.data.applications);
       setIsLoading(false);
     });
