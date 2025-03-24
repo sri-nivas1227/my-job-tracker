@@ -235,6 +235,13 @@ const DetailModal = ({
                         inputKey={data.key}
                         onInputValueChange={handleInputChange}
                         options={data.options}
+                        show={
+                          modalAction === "edit"
+                            ? data.editable
+                              ? true
+                              : false
+                            : true
+                        }
                         existingValue={
                           application[data.key] ? application[data.key] : ""
                         }
