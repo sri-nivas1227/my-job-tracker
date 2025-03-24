@@ -16,6 +16,7 @@ const DetailModal = ({
   modalAction,
   setModalAction,
   toast,
+  userId,
   setSelectedApplication,
 }) => {
   const [applicationForm, setApplicationForm] = useState(
@@ -70,6 +71,7 @@ const DetailModal = ({
         update_data[item.key] = item.value;
       });
       updatedApplication.update_data = update_data;
+      updatedApplication.userId = userId;
       axios
         .put(`/api/applications`, updatedApplication, {
           "Content-Type": "application/json",
@@ -162,6 +164,7 @@ const DetailModal = ({
         uploads.forEach((upload) => {
           updatedApplication[upload.key] = upload.fileUrl;
         });
+        updatedApplication.userId = userId;
         axios
           .post("/api/applications", updatedApplication, {
             "Content-Type": "application/json",

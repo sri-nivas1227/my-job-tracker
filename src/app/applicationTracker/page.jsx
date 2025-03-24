@@ -7,13 +7,14 @@ import DetailModal from "@/app/applicationTracker/components/DetailModal";
 import CreateApplicationTile from "@/app/applicationTracker/components/CreateApplicationTile";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-// import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-// import { jobs } from "@/lib/features/apptracker/trackerSlice";
+import { redirect } from "next/navigation";
 
 export default function ApplicationTrackerPage() {
-  // const [applicationList, setApplicationList] = useState([]);
-
+  const userData = JSON.parse(localStorage.getItem("user"));
+  if (!userData) {
+    redirect("/login");
+  }
   const [modalAction, setModalAction] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState({});
@@ -22,7 +23,7 @@ export default function ApplicationTrackerPage() {
   // const applicationList = useSelector(jobs);
   useEffect(() => {
     setIsLoading(true);
-    axios.get("/api/applications").then((res) => {
+    axios.get(`/api/applications?userId=${userData.id}`).then((res) => {
       setApplicationList(res.data.data.applications);
       setIsLoading(false);
     });
@@ -68,6 +69,7 @@ export default function ApplicationTrackerPage() {
           modalAction={modalAction}
           setModalAction={setModalAction}
           toast={toast}
+          userId={userData.id}
           setSelectedApplication={setSelectedApplication}
         />
       ) : null}
@@ -75,3 +77,31 @@ export default function ApplicationTrackerPage() {
     </div>
   );
 }
+
+// const handleLogin = () => {
+//   const response = confirm("Please login to continue");
+
+//   const email = prompt("Please enter your email");
+//   const password = prompt(
+//     "Please enter your password, create one if you don't have one"
+//   );
+//   const name = prompt("Please enter your name");
+//   console.log(email, password, name);
+//   if (email && password && name) {
+//     axios
+//       .post("/api/user", {
+//         email,
+//         password,
+//         name,
+//       })
+//       .then((res) => {
+//         if (!res.data.success) {
+//           alert("incorrect password");
+//         } else {
+//           localStorage.setItem("userData", JSON.stringify(res.data.data));
+//         }
+//       });
+//   } else {
+//     handleLogin();
+//   }
+// };

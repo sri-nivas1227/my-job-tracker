@@ -1,15 +1,20 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const applications = await prisma.application.findMany();
+export async function GET(req: NextRequest) {
+  // get userid from query params of the request
+  const userId = req.nextUrl.searchParams.get("userId");
+  // fetch all applications from the database for the user
+  const applications = await prisma.application.findMany({
+    where: { userId: userId },
+  });
   return NextResponse.json({
     success: true,
     data: { applications: applications },
   });
 }
 type createApplicationType = {
-  id?: string;
+  userId?: string;
   role: string;
   company: string;
   job_link: string;
@@ -37,7 +42,7 @@ export async function POST(req: NextRequest) {
       notes: data.notes ? data.notes : "",
       resume_link: data.resume_link,
       cover_letter_link: data.cover_letter_link,
-      userId: "201bc91a-5406-4666-a209-04bd00c4c3c2",
+      userId: data.userId,
     },
   });
   return NextResponse.json({
@@ -47,6 +52,7 @@ export async function POST(req: NextRequest) {
 }
 type editApplicationType = {
   id: string;
+  userId: string;
   update_data: {
     role: string;
     company: string;
@@ -63,7 +69,7 @@ export async function PUT(req: NextRequest) {
   const reqData: editApplicationType = await req.json();
   const id = reqData.id;
   const oldData = await prisma.application.findUnique({
-    where: { id },
+    where: { id, userId: reqData.userId },
   });
   const data = reqData.update_data;
   const updatableData = {};
