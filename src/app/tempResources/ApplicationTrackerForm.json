@@ -49,20 +49,6 @@
     "editable": true
   },
   {
-    "label": "Resume",
-    "type": "file",
-    "key": "resume_link",
-    "required": false,
-    "editable": false
-  },
-  {
-    "label": "Cover Letter",
-    "type": "file",
-    "key": "cover_letter_link",
-    "required": false,
-    "editable": false
-  },
-  {
     "label": "Status",
     "type": "dropdown",
     "key": "status",

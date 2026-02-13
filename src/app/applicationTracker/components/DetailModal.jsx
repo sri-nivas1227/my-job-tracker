@@ -40,7 +40,7 @@ const DetailModal = ({
     setShowModal(false);
     setModalAction("");
     setSelectedApplication({});
-    router.push("/applicationTracker");
+    window.location.reload();
   };
   const checkSubmission = (type) => {
     let submit = true;
@@ -63,7 +63,7 @@ const DetailModal = ({
       });
 
       setSubmitApplication(newApplication);
-      handleUploads();
+      // handleUploads();
     } else {
       const updatedApplication = { id: application.id };
       const update_data = {};
@@ -152,13 +152,13 @@ const DetailModal = ({
     }
   };
   useEffect(() => {
-    if (
-      submitApplication?.resume_link &&
-      submitApplication?.cover_letter_link
-    ) {
-      if (uploads.length < 2) {
-        return;
-      }
+    // if (
+    //   submitApplication?.resume_link &&
+    //   submitApplication?.cover_letter_link
+    // ) {
+    //   if (uploads.length < 2) {
+    //     return;
+    //   }
       if (submitApplication) {
         const updatedApplication = { ...submitApplication };
         uploads.forEach((upload) => {
@@ -173,9 +173,9 @@ const DetailModal = ({
             toast.success("Application Created Successfully");
             handleModalClose();
           });
-      }
+      // }
     }
-  }, [uploads]);
+  }, [submitApplication]);
   return (
     <div className=" fixed inset-0 bg-dark-gray bg-opacity-20 overflow-y-auto h-full w-full flex items-center justify-center">
       <div className="p-8 text-dark-blue font-moul border w-2/3 shadow-lg rounded-xl bg-light-cream flex flex-col gap-3">
@@ -286,9 +286,9 @@ const DetailModal = ({
               </>
             )}
           </div>
-          <div className="w-1/3 p-2">
+          {/* <div className="w-1/3 p-2">
             <PointsInModal />
-          </div>
+          </div> */}
         </div>
         <div className="flex justify-between items-center">
           <div

@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
       contact_phone: data.contact_phone,
       status: data.status,
       notes: data.notes ? data.notes : "",
-      resume_link: data.resume_link,
-      cover_letter_link: data.cover_letter_link,
+      resume_link: data.resume_link ? data.resume_link:"",
+      cover_letter_link: data.cover_letter_link ? data.cover_letter_link:"",
       userId: data.userId,
     },
   });
