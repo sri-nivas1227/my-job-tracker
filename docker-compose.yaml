@@ -1,17 +1,43 @@
-version: "3.8"
 services:
   postgres:
-    container_name: container-pg
-    image: postgres
-    hostname: localhost
-    ports:
-      - "5432:5432"
+    container_name: postgres-db
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: root
       POSTGRES_DB: test_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d test_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  app:
+    container_name: job-tracker-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://admin:root@postgres:5432/test_db
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
 volumes:
   postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
