@@ -11,23 +11,29 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 
 export default function ApplicationTrackerPage() {
-  const userData = JSON.parse(localStorage.getItem("user"));
-  if (!userData) {
-    redirect("/login");
-  }
   const [modalAction, setModalAction] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState({});
   const [applicationList, setApplicationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState();
   // const applicationList = useSelector(jobs);
   useEffect(() => {
-    setIsLoading(true);
-    axios.get(`/api/applications?userId=${userData.id}`).then((res) => {
-      setApplicationList(res.data.data.applications);
-      setIsLoading(false);
-    });
+    if (window.localStorage.getItem("user")) {
+      setUserData(JSON.parse(window.localStorage.getItem("user")));
+    } else {
+      redirect("/login");
+    }
   }, []);
+  useEffect(() => {
+    if (userData) {
+      setIsLoading(true);
+      axios.get(`/api/applications?userId=${userData.id}`).then((res) => {
+        setApplicationList(res.data.data.applications);
+        setIsLoading(false);
+      });
+    }
+  }, [userData]);
   if (isLoading) {
     return <div>Loading...</div>;
   }
