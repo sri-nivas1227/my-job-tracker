@@ -8,9 +8,7 @@ const InputTypes = ({
   show,
   existingValue,
 }) => {
-  options, "option";
-  inputKey, "inputKey";
-  inputType, "inputType";
+  
   if (!show) return <></>;
   if (inputType === "text") {
     return (

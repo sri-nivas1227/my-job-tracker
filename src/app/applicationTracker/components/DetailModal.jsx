@@ -3,7 +3,6 @@ import Image from "next/image";
 import crossIcon from "@/app/assets/icons/cross-icon.svg";
 import InputTypes from "@/app/applicationTracker/components/InputTypes";
 import formData from "@/app/tempResources/ApplicationTrackerForm.json";
-import PointsInModal from "@/app/applicationTracker/components/PointsInModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -34,7 +33,6 @@ const DetailModal = ({
   );
   const [submitApplication, setSubmitApplication] = useState(null);
 
-  const [uploads, setUploads] = useState([]);
   const router = useRouter();
   const handleModalClose = () => {
     setShowModal(false);
@@ -63,7 +61,6 @@ const DetailModal = ({
       });
 
       setSubmitApplication(newApplication);
-      // handleUploads();
     } else {
       const updatedApplication = { id: application.id };
       const update_data = {};
@@ -102,54 +99,6 @@ const DetailModal = ({
       return item;
     });
     setApplicationForm(newForm);
-  };
-  const handleUploads = () => {
-    const resume_file = applicationForm.find(
-      (item) => item.key === "resume_link"
-    );
-    const cover_letter_file = applicationForm.find(
-      (item) => item.key === "cover_letter_link"
-    );
-
-    const uploadPromises = [];
-
-    if (resume_file.value) {
-      handleFileUpload(resume_file.value, "resume_link");
-    }
-    if (cover_letter_file.value) {
-      handleFileUpload(cover_letter_file.value, "cover_letter_link");
-    }
-  };
-  const handleFileUpload = (file, key) => {
-    if (!file) return null;
-    try {
-      axios
-        .post("/api/fileUpload", {
-          fileName: file.name,
-          fileType: file.type,
-          userId: "201bc91a-5406-4666-a209-04bd00c4c3c2",
-        })
-        .then((res) => {
-          const signedUrl = res.data.data.signedUrl;
-          const fileUrl = res.data.data.viewUrl;
-          setUploads((prev) => prev.concat({ key, fileUrl }));
-          axios
-            .put(signedUrl, file, {
-              headers: {
-                "Content-Type": file.type,
-              },
-            })
-            .then((res) => {
-              if (res.status === 200) {
-                console.log("File uploaded successfully");
-              } else {
-                console.log("File upload failed");
-              }
-            });
-        });
-    } catch (error) {
-      console.error(error);
-    }
   };
   useEffect(() => {
     // if (
